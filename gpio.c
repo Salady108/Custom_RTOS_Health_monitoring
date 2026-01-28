@@ -2,10 +2,10 @@
 
 void gpio_init_output(int pin) {
     volatile uint32_t* reg;
-    uint32_t shift = (pin % 10) * 3;
+    uint32_t shift = (pin % 10) * 3; //configures GPIO pin as o/p, each pin uses 3 bits 
 
     // Select correct GPFSEL register
-    reg = (volatile uint32_t*)(GPIO_BASE + (pin / 10) * 4);
+    reg = (volatile uint32_t*)(GPIO_BASE + (pin / 10) * 4); // each register is 4 bytes wide 
 
     uint32_t val = *reg;
     val &= ~(7 << shift);    // clear

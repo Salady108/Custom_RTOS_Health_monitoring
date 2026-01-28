@@ -2,7 +2,7 @@ ENTRY(_start)
 
 SECTIONS {
     /* Pi3B+ firmware loads kernel8.img at 0x80000 */
-    . = 0x8000; /* means current location counter*/
+    . = 0x8000; /* means current location counter, this is the location where the kernel will be loaded*/
 
     /* Boot code (reset vector) */
     .text.boot : {

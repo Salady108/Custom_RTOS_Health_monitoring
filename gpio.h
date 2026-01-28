@@ -1,11 +1,11 @@
 #ifndef GPIO_H  /*prevents duplication from occuring*/
-#define GPIO_H
+#define GPIO_H /*GPIO pins are controlled by writing to specific memory address */
 
 #include <stdint.h> /*it defines fixed width integer types*/
 
-#define MMIO_BASE   0x3F000000UL   // Pi 2/3 memory mapped I/O
+#define MMIO_BASE   0x3F000000UL   // Pi 2/3 memory mapped I/O peripherals live here
 // #define MMIO_BASE 0xFE000000UL   // Pi 4, uncomment if needed
-#define GPIO_BASE   (MMIO_BASE + 0x200000) // because GPIO block starts at offset
+#define GPIO_BASE   (MMIO_BASE + 0x200000) // because GPIO block starts at offset from hardware manual
 
 #define GPFSEL0     ((volatile uint32_t*)(GPIO_BASE + 0x00)) //GPIO function select , volatile so that the cpu doesn't cache them,hardware can change the values
 #define GPFSEL1     ((volatile uint32_t*)(GPIO_BASE + 0x04)) //for pins 10 to 19

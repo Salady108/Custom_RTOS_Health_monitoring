@@ -4,7 +4,7 @@
 
 static void delay(unsigned long count) {
     while (count--) {
-        asm volatile("nop"); //no operation 
+        asm volatile("nop"); //no operation , volatile prevents it from getting removed from code by compiler 
     }
 }
 
@@ -13,7 +13,7 @@ void kernel_main(void) {
 
     while (1) {
         gpio_set(LED_PIN);
-        delay(500000);
+        delay(500000); // this basically runs the delay loop 500000 iterations, one iteration is in nano sesonds 
 
         gpio_clear(LED_PIN);
         delay(500000);
