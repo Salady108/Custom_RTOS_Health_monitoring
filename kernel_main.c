@@ -4,7 +4,7 @@
 
 static void delay(unsigned long count) {
     while (count--) {
-        asm volatile("nop");
+        asm volatile("nop"); //no operation 
     }
 }
 
