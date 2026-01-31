@@ -6,55 +6,56 @@
 CC      = aarch64-linux-gnu-gcc
 OBJCOPY = aarch64-linux-gnu-objcopy
 
-# ---- Architecture flags (CRITICAL) ----
+# ---- Architecture flags ----
 ARCH_FLAGS = -march=armv8-a -mcpu=cortex-a53 -mgeneral-regs-only
 
 # ---- Compiler flags ----
 CFLAGS  = -Wall -O0 -ffreestanding -nostdlib -nostartfiles \
-          $(ARCH_FLAGS) \
-          -I. -Ihw -Ihw/include -Irtos -Iapp
+          $(ARCH_FLAGS) -I.
 
 # ---- Linker flags ----
 LDFLAGS = -T linker.ld -nostdlib
 
-# ---- Source files ----
-SRC_ASM = /mnt/shared/C++programming/Rpi_practice/boot.s\
+# ---- Sources ----
+ASM_SRCS = boot.s
 
-SRC_C   = /mnt/shared/C++programming/Rpi_practice/kernel_main.c \
-          /mnt/shared/C++programming/Rpi_practice/gpio.c \
-          
+C_SRCS = \
+	kernel_main.c \
+	gpio.c \
+	timer.c \
+	irq.c \
+	irq_handler.c
 
-# ---- Object files (ASM FIRST – VERY IMPORTANT) ----
-OBJ_ASM = $(SRC_ASM:.S=.o)
-OBJ_C   = $(SRC_C:.c=.o)
-OBJ     = $(OBJ_ASM) $(OBJ_C)
+# ---- Objects ----
+OBJS = $(ASM_SRCS:.s=.o) $(C_SRCS:.c=.o)
 
-# ---- Target names ----
+# ---- Target ----
 TARGET = kernel
 
 # ---- Default target ----
 all: $(TARGET)8.img
 
+# ---- Assemble (.s) ----
+%.o: %.s
+	$(CC) $(CFLAGS) -c $< -o $@
+
 # ---- Compile C ----
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
-# ---- Assemble ASM ----
-%.o: %.S
-	$(CC) $(CFLAGS) -c $< -o $@
+# ---- Link ----
+$(TARGET).elf: $(OBJS) linker.ld
+	$(CC) $(ARCH_FLAGS) $(LDFLAGS) -o $@ $(OBJS)
 
-# ---- Link ELF ----
-$(TARGET).elf: $(OBJ) linker.ld
-	$(CC) $(ARCH_FLAGS) $(LDFLAGS) -o $@ $(OBJ)
-
-# ---- ELF → raw binary ----
+# ---- ELF → BIN ----
 $(TARGET).bin: $(TARGET).elf
 	$(OBJCOPY) -O binary $< $@
 
-# ---- Raspberry Pi kernel image (AArch64) ----
+# ---- Pi kernel image ----
 $(TARGET)8.img: $(TARGET).bin
 	cp $< $@
 
 # ---- Clean ----
+.PHONY: clean
 clean:
-	rm -f $(OBJ) $(TARGET).elf $(TARGET).bin $(TARGET)8.img
+	rm -f $(OBJS) $(TARGET).elf $(TARGET).bin $(TARGET)8.img
