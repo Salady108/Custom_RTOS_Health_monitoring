@@ -1,4 +1,4 @@
-#include "/mnt/shared/C++programming/Rpi_practice/gpio.h"
+#include "gpio.h"
 
 void gpio_init_output(int pin) {
     volatile uint32_t* reg;

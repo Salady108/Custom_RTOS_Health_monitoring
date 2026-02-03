@@ -8,7 +8,7 @@
 void kernel_main(void) {
     gpio_init_output(LED_PIN);
 
-    timer_init(500000);
+    timer_init();
     irq_init();
     enable_irq();
     while(1){
