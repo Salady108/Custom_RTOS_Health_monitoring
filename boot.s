@@ -1,14 +1,13 @@
 .section .text.boot
 .globl _start
 
-// ==========================================
 // 1. ENTRY POINT
-// ==========================================
+
 b _entry_point
 
-// ==========================================
+
 // 2. VECTOR TABLE (Aligned to 2KB)
-// ==========================================
+
 .align 11
 .global vectors
 vectors:
@@ -34,9 +33,9 @@ vectors:
 
     // (Lower ELs omitted for brevity)
 
-// ==========================================
+
 // 3. STARTUP CODE (EL2 Detection)
-// ==========================================
+
 _entry_point:
     // Check Current Exception Level (CurrentEL)
     mrs x0, CurrentEL
@@ -91,9 +90,9 @@ halt:
     wfe
     b halt
 
-// ==========================================
+
 // 4. IRQ HANDLER WRAPPER
-// ==========================================
+
 .global irq_entry
 irq_entry:
     // Adjusted stack size to fit x30
@@ -127,5 +126,5 @@ irq_entry:
     ldp x2,  x3,  [sp, #(16*1)]
     ldp x0,  x1,  [sp, #(16*0)]
 
-    add sp, sp, #256
+    add sp, sp,#256
     eret
