@@ -1,17 +1,17 @@
 #include "gpio.h"
 #include "timer.h"
-static int led_state=0;
+#include"uart.h"
+volatile uint64_t ticks=0;
+
 void irq_handler(void){
     timer_reset(); //generic timer is level triggered, need to reset it 
-   
     
-        if(led_state)
-        {
-            gpio_clear(4);
-            led_state=0;
-        }
-        else{
-            gpio_set(4);
-            led_state=1;
-        
-} }
+    ticks++;
+    if(ticks%1000==0){
+        uart_send_string("SysTick: ");
+        uart_send_hex(ticks);
+        uart_send_string(" ms\n");
+    }
+    
+       
+} 

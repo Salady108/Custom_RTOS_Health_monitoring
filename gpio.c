@@ -24,3 +24,12 @@ void gpio_clear(int pin) {
 int gpio_read(int pin) {
     return (*GPLEV0 & (1 << pin)) ? 1 : 0;
 }
+void gpio_funct_select(int pin, int func){
+    volatile uint32_t*reg=(volatile uint32_t*)(GPIO_BASE +(pin/10)*4);
+    uint32_t shift=(pin%10)*3;
+    uint32_t val=*reg;
+    val&=~(7<< shift);
+    val|=(func << shift);
+    *reg=val;
+
+}

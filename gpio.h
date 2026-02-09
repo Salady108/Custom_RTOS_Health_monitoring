@@ -25,7 +25,7 @@ void gpio_init_output(int pin); //configure a GPIO as o/p
 void gpio_set(int pin); //writes 1 to GPIOSET
 void gpio_clear(int pin);//writes 1 to GPIO CLEAR
 int  gpio_read(int pin); //reads from gPIOLEV
-
+void gpio_func_select(int pin,int func);
 #endif
 //Why this matters for GPIO
 

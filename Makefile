@@ -24,7 +24,8 @@ C_SRCS = \
 	gpio.c \
 	timer.c \
 	irq.c \
-	irq_handler.c
+	irq_handler.c\
+	uart.c
 
 # ---- Objects ----
 OBJS = $(ASM_SRCS:.s=.o) $(C_SRCS:.c=.o)

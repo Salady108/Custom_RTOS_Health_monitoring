@@ -1,16 +1,18 @@
 #include "gpio.h"
 #include "timer.h"
 #include "irq.h"
+#include"uart.h"
 
-#define LED_PIN 4   // GPIO4 = physical pin 7
 
 
 void kernel_main(void) {
-    gpio_init_output(LED_PIN);
-
-    timer_init();
+    uart_init();
+    uart_send_string("Hello from Bare Metal Pi\n");
     irq_init();
+    timer_init();
     enable_irq();
-    while(1){
-    asm volatile("wfi");
-}}
+    uart_send_string("TImer started. Waiting for interrupts...\n");
+    while(1) {
+        asm volatile("wfi");
+    }
+}
