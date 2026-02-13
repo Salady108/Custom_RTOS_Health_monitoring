@@ -11,7 +11,7 @@ b _entry_point
 .align 11
 .global vectors
 vectors:
-    // --- Current EL with SP0 ---
+    // --- Current EL with SP0 --- user stack pointer
     .balign 0x80
     b .
     .balign 0x80
