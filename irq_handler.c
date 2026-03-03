@@ -8,9 +8,9 @@ void irq_handler(void){
     
     ticks++; //tells us that 1 ms has passed
     if(ticks%1000==0){
-        uart_send_string("SysTick: ");
-        uart_send_hex(ticks);
-        uart_send_string(" ms\n");
+        //uart_send_string("SysTick: ");
+        //uart_send_hex(ticks);
+       // uart_send_string(" ms\n");
     }
     
        
