@@ -41,4 +41,40 @@ void uart_send(char c) {
                                       // Step B: Mask them so we ONLY see those 4 bits.
                                      // Step C: Look up the character in the 'digits' array.
     }
+
  }
+ void uart_send_decimal(int num) {
+    if (num == 0) {
+        uart_send('0');
+        return;
+    }
+    
+    // Handle negative numbers (like negative gravity)
+    if (num < 0) {
+        uart_send('-');
+        num = -num; // Make it positive for the math
+    }
+    
+    char buffer[10];
+    int i = 0;
+    
+    // Extract digits one by one
+    while (num > 0) {
+        buffer[i++] = (num % 10) + '0'; // Convert to ASCII character
+        num /= 10;
+    }
+    
+    // Print them out in reverse order
+    while (i > 0) {
+        uart_send(buffer[--i]);
+    }
+}
+char uart_recv(void) {
+    // Wait until the "RX FIFO Empty" flag is cleared
+    // The exact register depends on whether you use PL011 or Mini UART.
+    // Example for Mini UART (AUX_MU_LSR_REG):
+    while(1) {
+        if(*AUX_MU_LSR & 0x01) break; // Data is ready!
+    }
+    return (char)(*AUX_MU_IO & 0xFF);
+}

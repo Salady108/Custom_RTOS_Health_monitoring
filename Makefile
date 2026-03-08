@@ -18,15 +18,8 @@ LDFLAGS = -T linker.ld -nostdlib
 
 # ---- Sources ----
 ASM_SRCS = boot.s
+C_SRCS=uart.c gpio.c kernel_main.c mpu6050.c i2c.c irq.c irq_handler.c timer.c
 
-C_SRCS = \
-	kernel_main.c \
-	gpio.c \
-	timer.c \
-	irq.c \
-	irq_handler.c\
-	uart.c\
-	i2c.c
 # ---- Objects ----
 OBJS = $(ASM_SRCS:.s=.o) $(C_SRCS:.c=.o)
 
