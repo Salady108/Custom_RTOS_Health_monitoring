@@ -1,5 +1,5 @@
-#include"gpio.h"
-#include"uart.h"
+#include "gpio.h"
+#include "uart.h"
 
 #define BSC1_C      ((volatile uint32_t*)(MMIO_BASE + 0x00804000))
 #define BSC1_S      ((volatile uint32_t*)(MMIO_BASE + 0x00804004))
@@ -29,35 +29,43 @@
 #define BSC_S_DONE      (1 << 1)
 #define BSC_S_TA        (1 << 0)
 
-#define CLEAR_STATUS (BSC_S_CLKT |BSC_S_ERR | BSC_S_DONE)
+#define CLEAR_STATUS (BSC_S_CLKT | BSC_S_ERR | BSC_S_DONE)
+
 void i2c_init(void){
     gpio_funct_select(2,4);
     gpio_funct_select(3,4);
-    *BSC1_C=BSC_C_I2CEN|BSC_C_CLEAR;
-    *BSC1_S=CLEAR_STATUS;
 
-}
-void i2c_send(uint8_t address, uint8_t *buffer,uint32_t len){
-    *BSC1_A=address;
-    *BSC1_DLEN=len;
-    for (int i=0 ;i<len;i++){
-        *BSC1_FIFO=buffer[i];
-    }
-    *BSC1_S=CLEAR_STATUS;
-    *BSC1_C=BSC_C_I2CEN |BSC_C_ST;
-    while (!(*BSC1_S & BSC_S_DONE)){
+    *BSC1_C = BSC_C_I2CEN | BSC_C_CLEAR;
+    *BSC1_S = CLEAR_STATUS;
 
-    }
+    // 100kHz I2C for ~250MHz core clock
+    *BSC1_DIV  = 2500;
+    *BSC1_CLKT = 2048;
 }
+
+void i2c_send(uint8_t address, uint8_t *buffer, uint32_t len){
+    *BSC1_S = CLEAR_STATUS;
+    *BSC1_A = address;
+    *BSC1_DLEN = len;
+
+    for (uint32_t i = 0; i < len; i++){
+        *BSC1_FIFO = buffer[i];
+    }
+
+    *BSC1_C = BSC_C_I2CEN | BSC_C_ST;
+
+    while (!(*BSC1_S & BSC_S_DONE)) { }
+}
+
 void i2c_recv(uint8_t address, uint8_t *buffer, uint32_t len){
-    *BSC1_A=address;
-    *BSC1_DLEN=len;
-    *BSC1_C=BSC_C_I2CEN | BSC_C_ST|BSC_C_READ;
-    *BSC1_S=CLEAR_STATUS;
-    while(!(*BSC1_S&BSC_S_DONE)){
+    *BSC1_S = CLEAR_STATUS;
+    *BSC1_A = address;
+    *BSC1_DLEN = len;
+    *BSC1_C = BSC_C_I2CEN | BSC_C_ST | BSC_C_READ;
 
-    }
-    for(int i=0; i<len; i++){
-        buffer[i]=(uint8_t)(*BSC1_FIFO);
+    while (!(*BSC1_S & BSC_S_DONE)) { }
+
+    for (uint32_t i = 0; i < len; i++){
+        buffer[i] = (uint8_t)(*BSC1_FIFO);
     }
 }

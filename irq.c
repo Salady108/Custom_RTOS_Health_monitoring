@@ -11,3 +11,7 @@ void enable_irq(void){
     asm volatile ("msr daifclr,#2");
     //daif bits stores do not disturb sign, daifclr clears those bits so that cpu can handle interrupts
 }
+
+void disable_irq(void){
+    asm volatile ("msr daifset,#2");
+}
