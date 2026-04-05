@@ -10,7 +10,7 @@
 extern volatile uint64_t ticks;
 
 uint32_t get_now_ms(void) {
-    return (uint32_t)ticks;
+    return (uint32_t)ticks; //reads the number of ticks from irq_handler.c
 }
 
 void delay_ms(uint32_t ms) {

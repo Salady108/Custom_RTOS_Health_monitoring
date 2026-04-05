@@ -36,7 +36,7 @@ void uart_send(char c) {
     char*digits="0123456789ABCDEF";
     uart_send('0'); uart_send('x'); //standard hex perfix
     for(int i=28;i>=0;i-=4){
-        uart_send(digits[(n>>i)&0xF]); // 4. The Magic Math: (n >> i) & 0xF
+        uart_send(digits[(n>>i)&0xF]);  //  (n >> i) & 0xF
                                        // Step A: Shift the bits we want to the far right.
                                       // Step B: Mask them so we ONLY see those 4 bits.
                                      // Step C: Look up the character in the 'digits' array.

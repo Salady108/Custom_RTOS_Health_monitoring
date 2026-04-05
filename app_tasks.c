@@ -33,7 +33,7 @@ void sensor_task(void *arg) {
     const int32_t DOWNWARD_MG = -200;
     const uint32_t IMPACT_WINDOW_MS = 1200;
     const uint32_t BPM_WINDOW_MS = 10000;
-    const uint32_t SAMPLE_PERIOD_MS = 20;
+    const uint32_t SAMPLE_PERIOD_MS = 20; //samples every 20 ms
 
     for (;;) {
         uint32_t now = get_now_ms();
@@ -56,7 +56,6 @@ void sensor_task(void *arg) {
         g_shared.ay = ay;
         g_shared.az = az;
 
-        // Previous working logic: free-fall then impact within a short window.
         int32_t acc_mag_sq = (ax * ax) + (ay * ay) + (az * az);
 
         if (!gravity_calibrated) {

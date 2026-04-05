@@ -5,18 +5,18 @@
 #define TASK_SPSR_EL1 0x5
 
 typedef struct {
-    uint64_t x0_to_x30[31];
-    uint64_t elr_el1;
-    uint64_t spsr_el1;
-    uint64_t pad;
+    uint64_t x0_to_x30[31]; //stores 31 GP regs
+    uint64_t elr_el1;      // return address
+    uint64_t spsr_el1;    // status registers
+    uint64_t pad;        // pad word for alignment
 } task_frame_t;
 
 typedef struct {
-    uintptr_t sp;
-    uint64_t stack[TASK_STACK_WORDS] __attribute__((aligned(16)));
-    task_entry_t entry;
-    void *arg;
-    const char *name;
+    uintptr_t sp;   // task stack pointer
+    uint64_t stack[TASK_STACK_WORDS] __attribute__((aligned(16)));    // the task stack
+    task_entry_t entry; 
+    void *arg;  // arguments passed
+    const char *name; //task name
     int used;
 } task_t;
 
@@ -61,7 +61,7 @@ static task_frame_t *make_initial_frame(task_t *task) {
 int scheduler_create_task(const char *name, task_entry_t entry, void *arg) {
     if (task_count >= MAX_TASKS) {
         return -1;
-    }
+    }  // adds task to the table 
 
     task_t *task = &tasks[task_count];
     task->entry = entry;
@@ -84,7 +84,7 @@ uintptr_t scheduler_first_sp(void) {
 uintptr_t scheduler_tick(uintptr_t current_sp) {
     if (task_count == 0) {
         return current_sp;
-    }
+    }  // the switcher 
 
     tasks[current_task].sp = current_sp;
     current_task = (current_task + 1) % task_count;
